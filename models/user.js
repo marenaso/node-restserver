@@ -1,19 +1,19 @@
-const db = require('mongoose')
+const {Schema, model} = require("mongoose")
 
-let Schema = db.Schema
 
-let userSchema = new Schema({
+const userSchema = new Schema({
 	name: {
 		type: String,
-		required: [true, 'name is required']
+		required: [true, "name is required"]
 	},
 	email: {
 		type: String,
-		required: [true, 'email is required']
+		required: [true, "email is required"],
+		unique: true
 	},
 	password: {
 		type: String,
-		required: [true, 'password is required']
+		required: [true, "password is required"]
 	},
 	img: {
 		type: String,
@@ -21,7 +21,8 @@ let userSchema = new Schema({
 	},
 	role: {
 		type: String,
-		default: 'USER_ROLE'
+		enum: ["ADMIN_ROLE", "USER_ROLE"],
+		default: "USER_ROLE"
 	},
 	status: {
 		type: Boolean,
@@ -33,4 +34,4 @@ let userSchema = new Schema({
 	}
 })
 
-module.exports = db.model('user', userSchema)
+module.exports = model("user", userSchema)
