@@ -1,7 +1,7 @@
 const {request, response} = require("express")
 const bcryptjs = require("bcryptjs")
 const User = require("../models/user")
-const {validationResult} = require("express-validator")
+
 
 const getUser = (req = request, res = response) => {
 	const {name = "No name", page = 1, limit = 10} = req.query
@@ -10,10 +10,7 @@ const getUser = (req = request, res = response) => {
 
 const postUser = async (req, res = response) => {
 	// Validate request errors
-	const errors = validationResult(req)
-	if (!errors.isEmpty()) {
-		return res.status(400).json(errors)
-	}
+
 
 	// Extract data body
 	const {name, password, email, role} = req.body
