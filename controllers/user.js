@@ -9,18 +9,9 @@ const getUser = (req = request, res = response) => {
 }
 
 const postUser = async (req, res = response) => {
-	// Validate request errors
-
-
 	// Extract data body
 	const {name, password, email, role} = req.body
 	const user = new User({name, password, email, role})
-
-	// Verify email
-	const existEmail = await User.findOne({email})
-	if (existEmail) {
-		return res.status(400).json({msg: "Email already registered"})
-	}
 
 	// Encrypt password
 	const salt = bcryptjs.genSaltSync()
@@ -36,11 +27,22 @@ const postUser = async (req, res = response) => {
 
 }
 
-const putUser = (req = request, res = response) => {
-	const userId = req.params.userId
+const putUser = async (req = request, res = response) => {
+	const id = req.params.id
+	const {_id, password, google, email, ...other} = req.body
+
+	// Validate against DB
+	if (password) {
+		// Encrypt password
+		const salt = bcryptjs.genSaltSync()
+		other.password = bcryptjs.hashSync(password, salt)
+	}
+
+	const user = await User.findByIdAndUpdate(id, other)
+
 	res.json({
 		msg: "put User",
-		id: userId
+		id: user
 	})
 }
 
