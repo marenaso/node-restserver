@@ -55,8 +55,15 @@ const patchUser = (req, res = response) => {
 	res.json("put User")
 }
 
-const deleteUser = (req, res = response) => {
-	res.json("delete User")
+const deleteUser = async (req, res = response) => {
+	const {id} = req.params
+
+	// Delete document
+	//const user = await User.findByIdAndDelete(id)
+	// Deactivate user
+	const user = await User.findByIdAndUpdate(id, {status: false})
+
+	res.json(user)
 }
 
 module.exports = {

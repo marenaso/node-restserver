@@ -6,6 +6,7 @@ const {Router} = require("express")
 const router = Router()
 
 router.get("/", getUser)
+
 router.post("/", [
 	check("name", "Name is empty").not().isEmpty(),
 	check("password", "Password length should be more than 6 chars").isLength({min: 6}),
@@ -23,7 +24,12 @@ router.put("/:id", [
 	validateFields
 ], putUser)
 
+router.delete("/:id", [
+	check("id", "Is not a valid id").isMongoId(),
+	check("id").custom(existingUser),
+	validateFields
+], deleteUser)
+
 router.patch("/", patchUser)
-router.delete("/", deleteUser)
 
 module.exports = router
