@@ -3,9 +3,15 @@ const bcryptjs = require("bcryptjs")
 const User = require("../models/user")
 
 
-const getUser = (req = request, res = response) => {
-	const {name = "No name", page = 1, limit = 10} = req.query
-	res.json({msg: "get User - cont", name, page, limit})
+const getUser = async (req = request, res = response) => {
+	//const {name = "No name", page = 1, limit = 10} = req.query
+
+	const {limit = 5, from = 0} = req.query
+	const filterActiveUsers = {status: true}
+	const users = await User.find(filterActiveUsers).skip(Number(from)).limit(Number(limit))
+	const totalUsers = await User.countDocuments(filterActiveUsers)
+
+	res.json({totalUsers, users})
 }
 
 const postUser = async (req, res = response) => {
@@ -20,10 +26,7 @@ const postUser = async (req, res = response) => {
 	// Save user
 	await user.save()
 
-	res.json({
-		msg: "post",
-		user
-	})
+	res.json(user)
 
 }
 
@@ -40,10 +43,7 @@ const putUser = async (req = request, res = response) => {
 
 	const user = await User.findByIdAndUpdate(id, other)
 
-	res.json({
-		msg: "put User",
-		id: user
-	})
+	res.json(user)
 }
 
 const patchUser = (req, res = response) => {
