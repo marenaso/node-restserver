@@ -8,8 +8,13 @@ const getUser = async (req = request, res = response) => {
 
 	const {limit = 5, from = 0} = req.query
 	const filterActiveUsers = {status: true}
-	const users = await User.find(filterActiveUsers).skip(Number(from)).limit(Number(limit))
-	const totalUsers = await User.countDocuments(filterActiveUsers)
+	const findUsers = User.find(filterActiveUsers).skip(Number(from)).limit(Number(limit))
+	const countUsers = User.countDocuments(filterActiveUsers)
+
+	const [totalUsers, users] = await Promise.all([
+		countUsers,
+		findUsers
+	])
 
 	res.json({totalUsers, users})
 }
