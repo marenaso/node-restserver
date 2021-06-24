@@ -1,9 +1,9 @@
+const {Router} = require("express")
+const {check} = require("express-validator")
+const router = Router()
 const {isValidRole, existingEmail, existingUser} = require("../helpers/db-validators")
 const {validateFields} = require("../middlewares/field-validator")
-const {check} = require("express-validator")
 const {getUser, postUser, deleteUser, patchUser, putUser} = require("../controllers/user")
-const {Router} = require("express")
-const router = Router()
 
 router.get("/", getUser)
 
